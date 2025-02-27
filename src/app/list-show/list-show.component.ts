@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http'; 
 
 @Component({
   selector: 'app-list-show',
@@ -9,33 +10,46 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './list-show.component.html',
   styleUrls: ['./list-show.component.css']
 })
-export class ListShowComponent {
-  items = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-    { id: 3, name: 'Alice Johnson', email: 'alice@example.com', role: 'Editor' },
-    { id: 4, name: 'Bob Brown', email: 'bob@example.com', role: 'User' },
-  ];
-
+export class ListShowComponent implements OnInit {
+  items: any[] = []; 
   editingItemId: number | null = null;
 
-  // Start editing an item
+  constructor(private http: HttpClient) {} 
+
+  ngOnInit(): void {
+    this.fetchUsers();
+  }
+
+
+  fetchUsers(): void {
+    this.http.get<any[]>('https://localhost:7067/api/layer/users').subscribe(
+      (data) => {
+        this.items = data; 
+        console.log(data)
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }
+
+ 
   startEditing(itemId: number): void {
     this.editingItemId = itemId;
   }
 
-  // Save changes for the edited item
+  
   saveChanges(item: any): void {
-    this.editingItemId = null; // Exit editing mode
-    console.log('Updated item:', item); // You can send the updated item to your backend here
+    this.editingItemId = null; 
+    console.log('Updated item:', item); 
   }
 
-  // Delete an item with confirmation
+
   deleteItem(itemId: number): void {
     const confirmDelete = confirm('Are you sure you want to delete this item?');
     if (confirmDelete) {
-      this.items = this.items.filter(item => item.id !== itemId); // Remove the item from the list
-      console.log('Item deleted:', itemId); // You can send a delete request to your backend here
+      this.items = this.items.filter(item => item.id !== itemId); 
+      console.log('Item deleted:', itemId); 
     }
   }
 }
