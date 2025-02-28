@@ -41,8 +41,6 @@ export class ListShowComponent implements OnInit {
 
   saveChanges(item: any): void {
     this.editingItemId = null;
-
-
     this.http.put('https://localhost:7067/api/layer/update', item).subscribe(
       (response: any) => {
         console.log('User updated:', response);
@@ -59,8 +57,17 @@ export class ListShowComponent implements OnInit {
   deleteItem(itemId: number): void {
     const confirmDelete = confirm('Are you sure you want to delete this item?');
     if (confirmDelete) {
-      this.items = this.items.filter(item => item.id !== itemId);
-      console.log('Item deleted:', itemId);
+      this.http.delete(`https://localhost:7067/api/layer/delete/${itemId}`).subscribe(
+        (response: any) => {
+          console.log('User deleted:', response);
+          alert('User deleted successfully!');
+          this.items = this.items.filter(item => item.id !== itemId);
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+          alert('Failed to delete user.');
+        }
+      );
     }
   }
 }

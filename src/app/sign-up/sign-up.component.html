@@ -75,9 +75,9 @@
             <div *ngIf="signupForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</div>
           </div>
         </div>
-        <div *ngIf="submitted && signupForm.get('agreeTerms')?.errors?.['required']" class="mt-1 text-sm text-red-600">
+        <!-- <div *ngIf="submitted && signupForm.get('agreeTerms')?.errors?.['required']" class="mt-1 text-sm text-red-600">
           You must agree to the Terms and Conditions
-        </div>
+        </div> -->
 
         <div>
           <button type="submit"
