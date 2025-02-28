@@ -46,7 +46,7 @@ export class SignupComponent {
     if (this.signupForm.valid) {
       const formData = this.signupForm.value;
       // delete formData.confirmPassword;
-      debugger;
+      // debugger;
       this.http.post('https://localhost:7067/api/layer/signup', formData)
         .subscribe(
           (response: any) => {
