@@ -1,71 +1,52 @@
 <div class="min-h-screen bg-gray-100 p-6">
-    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-      <div class="p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">User List</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full bg-white">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th> -->
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr *ngFor="let item of items" class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-700">{{ item.id }}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">
-                  <input
-                    *ngIf="editingItemId === item.id"
-                    [(ngModel)]="item.firstName"
-                    class="w-full border border-gray-300 rounded-md px-2 py-1"
-                  />
-                  <span *ngIf="editingItemId !== item.id">{{ item.firstName }}</span>
-                </td>
-                <td class="px-6 py-4 text-sm text-gray-700">
-                  <input
-                    *ngIf="editingItemId === item.id"
-                    [(ngModel)]="item.email"
-                    class="w-full border border-gray-300 rounded-md px-2 py-1"
-                  />
-                  <span *ngIf="editingItemId !== item.id">{{ item.email }}</span>
-                </td>
-                <!-- <td class="px-6 py-4 text-sm text-gray-700">
-                  <input
-                    *ngIf="editingItemId === item.id"
-                    [(ngModel)]="item.role"
-                    class="w-full border border-gray-300 rounded-md px-2 py-1"
-                  />
-                  <span *ngIf="editingItemId !== item.id" class="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">{{ item.role }}</span>
-                </td> -->
-                <td class="px-6 py-4 text-sm text-gray-700">
-                  <button
-                    *ngIf="editingItemId !== item.id"
-                    (click)="startEditing(item.id)"
-                    class="text-indigo-600 hover:text-indigo-900 mr-4"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    *ngIf="editingItemId === item.id"
-                    (click)="saveChanges(item)"
-                    class="text-green-600 hover:text-green-900 mr-4"
-                  >
-                    Update
-                  </button>
-                  <button
-                    (click)="deleteItem(item.id)"
-                    class="text-red-600 hover:text-red-900"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">User List</h2>
+      
+      <ag-grid-angular
+        style="width: 100%; height: 500px;"
+        class="ag-theme-alpine"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)"
+        domLayout="autoHeight"
+      >
+      </ag-grid-angular>
     </div>
   </div>
+</div>
+
+<div *ngIf="showEditModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+    <h3 class="text-xl font-semibold mb-4">Edit User</h3>
+    
+    <input 
+      [(ngModel)]="editingItem.firstName" 
+      class="w-full border border-gray-300 rounded-md px-3 py-2 mb-4"
+      placeholder="Name"
+    >
+    
+    <input 
+      [(ngModel)]="editingItem.email" 
+      class="w-full border border-gray-300 rounded-md px-3 py-2 mb-4"
+      placeholder="Email"
+    >
+    
+    <div class="flex justify-end gap-2">
+      <button 
+        (click)="cancelEdit()" 
+        class="px-4 py-2 border border-gray-300 rounded-md text-gray-700"
+      >
+        Cancel
+      </button>
+      <button 
+        (click)="saveChanges(editingItem)" 
+        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>
